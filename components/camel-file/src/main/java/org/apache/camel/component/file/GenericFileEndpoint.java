@@ -69,6 +69,8 @@ public abstract class GenericFileEndpoint<T> extends ScheduledPollEndpoint imple
 
     @UriParam(label = "advanced", defaultValue = "true")
     protected boolean autoCreate = true;
+    @UriParam(label = "advanced", defaultValue = "false")
+    protected boolean accessCheck = false;
     @UriParam(label = "advanced", defaultValue = "" + FileUtil.BUFFER_SIZE)
     protected int bufferSize = FileUtil.BUFFER_SIZE;
     @UriParam
@@ -1099,6 +1101,10 @@ public abstract class GenericFileEndpoint<T> extends ScheduledPollEndpoint imple
     public boolean isAutoCreate() {
         return autoCreate;
     }
+    
+     public boolean isAccessCheck() {
+        return accessCheck;
+    }
 
     /**
      * Automatically create missing directories in the file's pathname. For the file consumer, that means creating the starting directory.
@@ -1106,6 +1112,13 @@ public abstract class GenericFileEndpoint<T> extends ScheduledPollEndpoint imple
      */
     public void setAutoCreate(boolean autoCreate) {
         this.autoCreate = autoCreate;
+    }
+    /**
+     * Check if the necessary permits for the directory are available. For normal operation, directories require read and write permissions.
+     *  With this option,  if these permits are not available, an exception will be thrown..
+     */
+     public void setAccessCheck(boolean accessCheck) {
+        this.accessCheck = accessCheck;
     }
 
     public boolean isStartingDirectoryMustExist() {

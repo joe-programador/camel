@@ -18,6 +18,7 @@ package org.apache.camel.component.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
@@ -88,8 +89,16 @@ public class FileEndpoint extends GenericFileEndpoint<File> {
                     log.warn("Cannot auto create starting directory: {}", file);
                 }
             } else if (isStartingDirectoryMustExist()) {
-                throw new FileNotFoundException("Starting directory does not exist: " + file);
+               
             }
+        }else  {
+           if (isAccessCheck()){
+               if (!file.canRead() || !file.canWrite() ){
+                   throw new IOException("The directory "+file.getAbsolutePath()+" does not have read or write access necessary for its normal operation");
+               }
+               
+            
+           }
         }
 
         FileConsumer result = newFileConsumer(processor, operations);
